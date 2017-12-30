@@ -89,16 +89,8 @@ int CimpleBulletEngine::start() {
 	return 0;
 }
 
-bool CimpleBulletEngine::input() {
-	SDL_Event event;
-	while (SDL_PollEvent(&event)) {
-		if (event.type == SDL_KEYDOWN)
-			std::cout << event.key.keysym.scancode << std::endl;
-		Action* act = events[SDL_EventType(event.type)];
-		if (act != NULL)
-			act->execute(event);
-	}
-	return false;
+void CimpleBulletEngine::input() {
+	cmdMgr.tick();
 }
 
 void CimpleBulletEngine::tickObjects() {
@@ -131,9 +123,7 @@ void CimpleBulletEngine::close() {
 void CimpleBulletEngine::addSprite(Sprite * sprite) {
 	objects.push_back(sprite);
 }
-void CimpleBulletEngine::addCommand(SDL_EventType event, Action* action) {
-	events[event] = action;
-}
+
 void CimpleBulletEngine::onQuitEvent(SDL_Event& event) {
 	if (event.type == SDL_QUIT) {
 		std::cout << "quitting" << std::endl;

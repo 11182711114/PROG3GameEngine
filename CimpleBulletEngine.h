@@ -8,6 +8,7 @@
 #include "Sprite.h"
 #include "IMovable.h"
 #include "Action.h"
+#include "CommandManager.h"
 
 class CimpleBulletEngine {
 private:
@@ -28,7 +29,8 @@ private:
 	std::list<IMovable*> movables;
 
 	// Command-action mapping
-	std::map<SDL_EventType, Action*> events;
+	//std::map<SDL_EventType, Action*> events;
+	CommandManager cmdMgr;
 public:
 	CimpleBulletEngine();
 	CimpleBulletEngine(int x, int y, int rr, std::string title);
@@ -37,10 +39,10 @@ public:
 	int& getTimeDiff() { return timeDiff; };
 	int start();
 	void addSprite(Sprite* sprite);
-	void addCommand(SDL_EventType event, Action* action);
+	CommandManager& getCommandManager() { return cmdMgr; };
 	void onQuitEvent(SDL_Event& event);
 private:
-	bool input();
+	void input();
 	void close();
 	void renderObjects();
 	void tickObjects();

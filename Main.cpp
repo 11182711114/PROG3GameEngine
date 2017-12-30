@@ -4,6 +4,7 @@
 #include <list>
 #include "AnimatedSprite.h"
 #include "Action.h"
+#include <SDL.h>
 
 
 int main(int argc, char** argv) {
@@ -16,10 +17,14 @@ int main(int argc, char** argv) {
 	cbe->addSprite(player);
 	
 	Action* playerAction = new Action(player, &Player::onEvent);
-	cbe->addCommand(SDL_KEYDOWN, playerAction);
+
+	CommandManager& cmd = cbe->getCommandManager();
+	cmd.bindKey(SDL_SCANCODE_RIGHT, *playerAction);
+	//cbe->addCommand(SDL_KEYDOWN, playerAction);
 
 	Action* quitAction = new Action(cbe, &CimpleBulletEngine::onQuitEvent);
-	cbe->addCommand(SDL_QUIT, quitAction);
+	cmd.bindEvent(SDL_QUIT, *quitAction);
+	//cbe->addCommand(SDL_QUIT, quitAction);
 
 	std::list<AnimationNode*> animation;
 	animation.push_back(new AnimationNode("C:/Users/Fredrik/source/repos/cBH/media/right.bmp"));

@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <iostream>
 
 Player::Player(int x, int y, int sizeX, int sizeY, int speed,int& timeDiff, std::string path) : 
 	Sprite(x, y, sizeX, sizeY, path),
@@ -9,6 +10,7 @@ Player::Player(int x, int y, int sizeX, int sizeY, int speed,int& timeDiff, std:
 Player::~Player() {}
 
 void Player::tick(std::list<Sprite*> otherObj) {
+	int size = moveBuffer.size();
 	if (moveBuffer.size() == 0)
 		return;
 

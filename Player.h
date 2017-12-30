@@ -11,7 +11,7 @@ public:
 	~Player();
 	void move(int timeDiff, IMovable::DIRECTION dir);
 	void tick(std::list<Sprite*> otherObj);
-	void onEvent(SDL_Event& event);
+	void moveWithState(const Uint8* kbState);
 };
 
 #endif

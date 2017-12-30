@@ -16,15 +16,15 @@ void CommandManager::tick() {
 }
 
 void CommandManager::checkKbState() {
-	for (std::map<SDL_Scancode, std::list<Action*>*>::iterator it = mappedKeys.begin(); it != mappedKeys.end(); ++it) {
+	for (std::map<SDL_Scancode, std::list<KeyAction*>*>::iterator it = mappedKeys.begin(); it != mappedKeys.end(); ++it) {
 		SDL_Scancode scancode = it->first;
 		if (kbState[scancode]) {
-			std::list<Action*>* keyList = it->second;
+			std::list<KeyAction*>* keyList = it->second;
 
 			if (keyList == NULL)
 				return;
-			for (Action* act : *keyList)
-				act->execute(*new SDL_Event());
+			for (KeyAction* act : *keyList)
+				act->execute(kbState);
 		}
 	}
 }
@@ -45,10 +45,10 @@ void CommandManager::pollEvents() {
 	}
 }
 
-void CommandManager::bindKey(SDL_Scancode scancode, Action & action) {
-	std::list<Action*>* keyActions = mappedKeys[scancode];
+void CommandManager::bindKey(SDL_Scancode scancode, KeyAction & action) {
+	std::list<KeyAction*>* keyActions = mappedKeys[scancode];
 	if (keyActions == NULL) {
-		keyActions = new std::list<Action*>();
+		keyActions = new std::list<KeyAction*>();
 		mappedKeys[scancode] = keyActions;
 	}
 	keyActions->push_back(&action);
@@ -64,9 +64,9 @@ void CommandManager::bindEvent(SDL_EventType type, Action & action) {
 }
 
 void CommandManager::unbindKey(SDL_Scancode scancode) {
-	std::list<Action*>* keyActions = mappedKeys[scancode];
+	std::list<KeyAction*>* keyActions = mappedKeys[scancode];
 	if (keyActions == NULL) {
-		keyActions = new std::list<Action*>();
+		keyActions = new std::list<KeyAction*>();
 		mappedKeys[scancode] = keyActions;
 }
 	*keyActions = {};

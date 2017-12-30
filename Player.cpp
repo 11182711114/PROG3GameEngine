@@ -22,23 +22,16 @@ void Player::tick(std::list<Sprite*> otherObj) {
 	}
 }
 
-void Player::onEvent(SDL_Event & event) {
-	if (event.type == SDL_KEYDOWN) {
-		switch (event.key.keysym.scancode) {
-		case SDL_SCANCODE_LEFT:
-			IMovable::moveBuffer.push(IMovable::DIRECTION::LEFT);
-			break;
-		case SDL_SCANCODE_RIGHT:
-			IMovable::moveBuffer.push(IMovable::DIRECTION::RIGHT);
-			break;
-		case SDL_SCANCODE_UP:
-			IMovable::moveBuffer.push(IMovable::DIRECTION::UP);
-			break;
-		case SDL_SCANCODE_DOWN:
-			IMovable::moveBuffer.push(IMovable::DIRECTION::DOWN);
-			break;
-		}
-	}
+void Player::moveWithState(const Uint8* kbState) {
+	if (kbState[SDL_SCANCODE_LEFT])
+		IMovable::moveBuffer.push(IMovable::DIRECTION::LEFT);
+	if (kbState[SDL_SCANCODE_RIGHT])
+		IMovable::moveBuffer.push(IMovable::DIRECTION::RIGHT);
+	if (kbState[SDL_SCANCODE_UP])
+		IMovable::moveBuffer.push(IMovable::DIRECTION::UP);
+	if (kbState[SDL_SCANCODE_DOWN])
+		IMovable::moveBuffer.push(IMovable::DIRECTION::DOWN);
+		
 }
 
 void Player::move(int timeDiff, DIRECTION dir) {

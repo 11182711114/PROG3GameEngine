@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
 	Player* player = new Player(0, 0, 145, 50, 500, cbe->getTimeDiff(), "C:/Users/Fredrik/source/repos/cBH/media/right.bmp");
 	cbe->addSprite(player);
 	
-	Action* playerAction = new Action(player, &Player::onEvent);
+	KeyAction* playerAction = new KeyAction(player, &Player::moveWithState);
 
 	CommandManager& cmd = cbe->getCommandManager();
 	cmd.bindKey(SDL_SCANCODE_RIGHT, *playerAction);

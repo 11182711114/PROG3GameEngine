@@ -2,6 +2,7 @@
 #define ACTION_H
 #include <functional>
 #include <SDL.h>
+#include <vector>
 
 class Action {
 private:
@@ -23,6 +24,7 @@ public:
 class KeyAction {
 private:
 	std::function <void(const Uint8*)> function;
+	
 public:
 	/*template <typename T>
 	static Action bind(T *object, void(T::*mf)(SDL_Event& event)) {
@@ -33,7 +35,9 @@ public:
 	}
 
 	template <typename T>
-	KeyAction(T *object, void(T::*mf)(const Uint8*)) { function = std::bind(mf, object, std::placeholders::_1); };
+	KeyAction(T *object, void(T::*mf)(const Uint8*)) { 
+		function = std::bind(mf, object, std::placeholders::_1); 
+	};
 	~KeyAction();
 };
 

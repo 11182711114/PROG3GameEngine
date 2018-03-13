@@ -6,7 +6,6 @@
 #include <list>
 #include <map>
 #include "Sprite.h"
-#include "IMovable.h"
 #include "Action.h"
 #include "CommandManager.h"
 
@@ -26,7 +25,6 @@ private:
 
 	// Gameworld stuffs
 	std::list<Sprite*> objects;
-	std::list<IMovable*> movables;
 
 	// Command-action mapping
 	//std::map<SDL_EventType, Action*> events;

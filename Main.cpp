@@ -16,10 +16,13 @@ int main(int argc, char** argv) {
 	Player* player = new Player(0, 0, 145, 50, 500, cbe->getTimeDiff(), "C:/Users/Fredrik/source/repos/cBH/media/right.bmp");
 	cbe->addSprite(player);
 	
-	KeyAction* playerAction = new KeyAction(player, &Player::moveWithState);
+	KeyAction* playerAction = new KeyAction(player, &Player::moveVertical);
 
 	CommandManager& cmd = cbe->getCommandManager();
 	cmd.bindKey(SDL_SCANCODE_RIGHT, *playerAction);
+	cmd.bindKey(SDL_SCANCODE_LEFT, *playerAction);
+	cmd.bindKey(SDL_SCANCODE_UP, *playerAction);
+	cmd.bindKey(SDL_SCANCODE_DOWN, *playerAction);
 	//cbe->addCommand(SDL_KEYDOWN, playerAction);
 
 	Action* quitAction = new Action(cbe, &CimpleBulletEngine::onQuitEvent);

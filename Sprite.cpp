@@ -1,5 +1,6 @@
 #include "Sprite.h"
-
+#include <iostream>
+#include "Position.h"
 
 void Sprite::init(SDL_Renderer *ren) {
 
@@ -14,12 +15,26 @@ void Sprite::init(SDL_Renderer *ren) {
 
 void Sprite::tick(std::list<Sprite*> otherObj) {}
 
-Sprite::Sprite(int x, int y, int sizeX, int sizeY, std::string imagePath) :
-	posX(x),
-	posY(y),
+void Sprite::render(SDL_Renderer *renderer) {
+	SDL_Rect rect = { pos.getPositionXAsInt(), pos.getPositionYAsInt(), sizeX, sizeY };
+	//std::cout << "rendering: " << spr->getPath() << " @ x: " << spr->getPositionX() << " y: " << spr->getPositionY() << " sizeX: " << spr->getSizeX() << " sizeY: " << spr->getSizeY() << std::endl;
+	if (SDL_RenderCopy(renderer, texture, NULL, &rect) != 0)
+		std::cout << "error: " << SDL_GetError() << std::endl;
+}
+
+Sprite::Sprite(Position pos, int sizeX, int sizeY, std::string imagePath) :
+	pos(pos),
 	sizeX(sizeX),
 	sizeY(sizeY),
-	imagePath(imagePath) {}
+	imagePath(imagePath) 
+{}
+
+Sprite::Sprite(int x, int y, int sizeX, int sizeY, std::string imagePath) :
+	pos(*new Position(x, y)),
+	sizeX(sizeX),
+	sizeY(sizeY),
+	imagePath(imagePath) 
+{}
 
 Sprite::~Sprite() {
 	if (texture != NULL)

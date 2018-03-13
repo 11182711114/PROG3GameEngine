@@ -3,9 +3,9 @@
 #include <SDL.h>
 #include <string>
 #include <list>
+#include "Position.h"
 
-class Sprite
-{
+class Sprite {
 private:
 	SDL_Texture * texture;
 public:
@@ -16,20 +16,18 @@ public:
 	virtual void tick(std::list<Sprite*> otherObj);
 
 	// Getters setter
-	float getPositionX() { return posX; };
-	float getPositionY() { return posY; };
-	int getSizeX() { return sizeX; };
-	int getSizeY() { return sizeY; };
-	void setPositionX(float x) { posX = x; };
-	void setPositionY(float y) { posY = y; };
-	std::string getPath() { return imagePath; };
-	SDL_Texture* getTexture() { return texture; };
+	int getSizeX() const { return sizeX; };
+	int getSizeY() const { return sizeY; };
+	Position* getPosition() { return &pos; };
+	std::string getPath() const { return imagePath; };
+	SDL_Texture* getTexture() const { return texture; };
+	virtual void render(SDL_Renderer* renderer);
 protected:
 	std::string imagePath;
-	float posX;
-	float posY;
+	Position pos;
 	int sizeX;
 	int sizeY;
+	Sprite(Position pos, int sizeX, int sizeY, std::string imagePath);
 	Sprite(int x, int y, int sizeX, int sizeY, std::string imagePath);
 	void setTexture(SDL_Texture*  texture) { this->texture = texture; };
 private:

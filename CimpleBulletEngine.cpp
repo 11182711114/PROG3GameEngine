@@ -103,10 +103,7 @@ void CimpleBulletEngine::renderObjects() {
 	SDL_RenderClear(renderer);
 
 	for (Sprite* spr : objects) {
-		SDL_Rect rect = { spr->getPositionX(), spr->getPositionY(), spr->getSizeX(), spr->getSizeY() };
-		//std::cout << "rendering: " << spr->getPath() << " @ x: " << spr->getPositionX() << " y: " << spr->getPositionY() << " sizeX: " << spr->getSizeX() << " sizeY: " << spr->getSizeY() << std::endl;
-		if (SDL_RenderCopy(renderer, spr->getTexture(), NULL, &rect) != 0)
-			std::cout << "error: " << SDL_GetError() << std::endl;
+		spr->render(*renderer);
 	}
 	SDL_RenderPresent(renderer);
 }

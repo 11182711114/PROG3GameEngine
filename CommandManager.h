@@ -8,7 +8,7 @@
 
 class CommandManager {
 public:
-	CommandManager(TTF_Font *font, int x, int y, int w, int h);
+	CommandManager(int x, int y, int w, int h);
 	CommandManager(TextInput *tIn);
 
 	~CommandManager();
@@ -21,6 +21,13 @@ public:
 
 	void unbindKey(SDL_Scancode scancode);
 	void unbindEvent(SDL_EventType event);
+
+	void acceptKeyInput(const Uint8* kbState);
+	void passRenderer(SDL_Renderer *renderer);
+
+	TextInput* getTextInput() {
+		return textInput; 
+	};
 private:
 	int kbStateNumKeys;
 	const Uint8* kbState;

@@ -12,7 +12,7 @@ CimpleBulletEngine::CimpleBulletEngine(int x, int y, int rr, std::string title) 
 	SCREEN_HEIGHT(y),
 	refreshRate(rr),
 	windowTitle(title),
-	cmdMgr(*new CommandManager(font, (SCREEN_WIDTH / 2) - (SCREEN_WIDTH - (SCREEN_WIDTH / 4)), SCREEN_HEIGHT - 100, SCREEN_WIDTH - (SCREEN_WIDTH / 4), 50))
+	cmdMgr(*new CommandManager((SCREEN_WIDTH / 2), SCREEN_HEIGHT - 100, SCREEN_WIDTH - (SCREEN_WIDTH / 4), 50))
 {
 };
 //Copy
@@ -54,7 +54,10 @@ int CimpleBulletEngine::start() {
 				if (renderer == NULL) {
 					printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
 				}
+
 				font = TTF_OpenFont("C:/Users/Fredrik/source/repos/cBH/media/arial.ttf", 25);
+
+				cmdMgr.passRenderer(renderer);
 
 				//Initiate sprites, i.e. get textures
 				for (Level* lvl : levels) {
@@ -87,9 +90,7 @@ int CimpleBulletEngine::start() {
 					// Main loop calls
 					if (!paused)
 						tickLevel();
-						//tickObjects();
 					renderLevel(renderer);
-					//renderObjects();
 
 					input();
 
@@ -102,6 +103,10 @@ int CimpleBulletEngine::start() {
 		}
 	}
 	return 0;
+}
+
+SDL_Renderer* CimpleBulletEngine::getRenderer() {
+	return renderer;
 }
 
 void CimpleBulletEngine::input() {
@@ -146,16 +151,9 @@ void CimpleBulletEngine::close() {
 	}
 }
 
-void CimpleBulletEngine::addSprite(StaticSprite *sprite) {
-	objects.push_back(sprite);
-}
-
-void CimpleBulletEngine::addBackground(Background *sprite) {
-	backgrounds.push_back(sprite);
-}
-
 void CimpleBulletEngine::addLevel(Level * level) {
 	levels.push_back(level);
+	level->addGui("editbox", cmdMgr.getTextInput());
 }
 
 void CimpleBulletEngine::onQuitEvent(SDL_Event& event) {
@@ -179,7 +177,7 @@ void CimpleBulletEngine::pause(const Uint8* kbState) {
 		int w, h;
 		SDL_QueryTexture(texture, NULL, NULL, &w, &h);
 
-		StaticSprite *pausedSpr = new StaticSprite((SCREEN_WIDTH / 2) - (w / 2), (SCREEN_HEIGHT / 2) - (h / 2), w, h, texture);
+		StaticSprite *pausedSpr = new StaticSprite((SCREEN_WIDTH / 2) - (w / 2), (SCREEN_HEIGHT / 2) - (h / 2), 0, 0, w, h, texture);
 		currentLevel->addGui("paused", pausedSpr);
 
 		SDL_FreeSurface(surface);

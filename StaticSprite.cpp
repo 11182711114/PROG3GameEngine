@@ -10,6 +10,7 @@ void StaticSprite::init(SDL_Renderer *ren) {
 		texture = SDL_CreateTextureFromSurface(ren, surf);
 
 		this->surface = surf;
+		this->initialized = true;
 	}
 }
 
@@ -18,10 +19,23 @@ void StaticSprite::tick(std::vector<StaticSprite*> otherObj) {
 }
 
 void StaticSprite::render(SDL_Renderer *renderer) {
-	SDL_Rect rect = makeRect();
+	SDL_Rect rect = makeRect(); 
+	
+	/*SDL_SetRenderDrawColor(renderer,
+		0xFF,
+		0,
+		0,
+		0xFF);
+
+	SDL_RenderDrawRect(renderer, &rect);*/
+
 	//std::cout << "rendering: " << spr->getPath() << " @ x: " << spr->getPositionX() << " y: " << spr->getPositionY() << " sizeX: " << spr->getSizeX() << " sizeY: " << spr->getSizeY() << std::endl;
-	if (SDL_RenderCopy(renderer, texture, NULL, &rect) != 0)
-		std::cout << "error: " << SDL_GetError() << std::endl;
+	if (!initialized)
+		init(renderer);
+	if (texture != NULL) {
+		if (SDL_RenderCopy(renderer, texture, NULL, &rect) != 0)
+			std::cout << "error: " << SDL_GetError() << std::endl;
+	}
 }
 
 StaticSprite::StaticSprite(Position pos, int sizeX, int sizeY, std::string imagePath) :
@@ -31,15 +45,15 @@ StaticSprite::StaticSprite(Position pos, int sizeX, int sizeY, std::string image
 	imagePath(imagePath) 
 {}
 
-StaticSprite::StaticSprite(int x, int y, int sizeX, int sizeY, std::string imagePath) :
-	pos(*new Position(x, y)),
+StaticSprite::StaticSprite(int x, int y, int boundX, int boundY, int sizeX, int sizeY, std::string imagePath) :
+	pos(*new Position(x, y, boundX, boundY)),
 	sizeX(sizeX),
 	sizeY(sizeY),
 	imagePath(imagePath) 
 {}
 
-StaticSprite::StaticSprite(int x, int y, int sizeX, int sizeY, SDL_Texture *texture) :
-	pos(*new Position(x, y)),
+StaticSprite::StaticSprite(int x, int y, int boundX, int boundY, int sizeX, int sizeY, SDL_Texture *texture) :
+	pos(*new Position(x, y, 0, 0)),
 	sizeX(sizeX),
 	sizeY(sizeY),
 	texture(texture) {}
@@ -65,7 +79,7 @@ bool StaticSprite::intersect(StaticSprite * other) {
 	SDL_Rect res = {};*/
 
 	if (fastIntersect(other)) {
-		std::cout << "Fast intersect detected" << std::endl;
+		//std::cout << "Fast intersect detected" << std::endl;
 		return true;
 
 		//if (this->surface == NULL) {
@@ -162,23 +176,16 @@ bool StaticSprite::pixelIntersect(int x, int y) {
 }
 
 bool StaticSprite::fastIntersect(StaticSprite * other) {
-	int tT, tB, tL, tR;
-	tT = this->getPosition()->getPositionYAsInt();
-	tB = tT + sizeY;
-	tL = this->getPosition()->getPositionXAsInt();
-	tR = tL + sizeX;
-
-	int oT, oB, oL, oR;
-	oT = other->getPosition()->getPositionYAsInt();
-	oB = oT + sizeY;
-	oL = other->getPosition()->getPositionXAsInt();
-	oR = oL + sizeX;
+	SDL_Rect thisR = makeRect();
+	SDL_Rect otherR = other->makeRect();
 
 	return !(
-			oL > tR
-		||	oR < tL
-		||	oT > tB
-		||	oB < tT);
+		thisR.x		+ thisR.w	< otherR.x	|| 
+		otherR.x	+ otherR.w	< thisR.x	|| 
+		thisR.y		+ thisR.h	< otherR.y	|| 
+		otherR.y	+ otherR.h	< thisR.y
+		);
+		
 }
 
 SDL_Rect StaticSprite::makeRect() {

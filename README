@@ -1,0 +1,24 @@
+Fredrik Larsson 9306278111
+Anspråk på betyg: C
+
+
+För spelet:
+Kräver en folder("media") i samma directory som Game.cpp med alla media filer som skickades med;
+* arial.ttf
+* background.bmp
+* enemy.bmp
+* right0.bmp
+...
+* right4.bmp
+* rocketR.bmp
+
+
+Kontroll:
+* Flytta med piltangenterna, 
+	OBS. pg.a. hur input är hanterad finns det en bug som gör 
+	att spelaren flyttas dubbelt så snabbt som är tänkt när 
+	två tangenter i samma led(t.ex. -> & <-) samt en i det andra
+	ledet.
+* Skjut med space
+
+Fienderna dör efter ett skott.

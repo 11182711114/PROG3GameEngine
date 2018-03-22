@@ -1,17 +1,20 @@
 #include "Player.h"
 #include <iostream>
 #include "SpeedLimiter.h"
+#include "Level.h"
+#include "Bullet.h"
 
-Player::Player(int x, int y, int sizeX, int sizeY, int speed,int& timeDiff, std::string path) : 
-	StaticSprite(x, y, sizeX, sizeY, path),
+Player::Player(int x, int y, int boundX, int boundY, int sizeX, int sizeY, int speed,int& timeDiff, std::list<AnimationNode*> animation, Level* cLevel) :
+	AnimatedSprite(x, y, boundX, boundY, sizeX, sizeY, animation),
 	sLimit(*new SpeedLimiter(speed)),
-	timeDiff(timeDiff)
+	timeDiff(timeDiff),
+	cLevel(cLevel)
 {}
 
 Player::~Player() {}
 
 void Player::tick(std::vector<StaticSprite*> otherObj) {
-	StaticSprite::tick(otherObj);
+	AnimatedSprite::tick(otherObj);
 	sLimit.clear();
 }
 
@@ -49,24 +52,45 @@ void Player::speedConstrainedMove(const Uint8* kbState) {
 	move(y, speedY);
 }
 
+void Player::setLevel(Level * level) {
+	cLevel = level;
+}
+
+void Player::fire(const Uint8 * kbState) {
+	// int x, int y, int sizeX, int sizeY, std::string imagePath, int& timeDiff
+	Bullet *bullet = new Bullet(pos.getPositionXAsInt(), pos.getPositionYAsInt()+sizeY/2, pos.getBoundX(), pos.getBoundY(), 20, 7, "C:/Users/Fredrik/source/repos/cBH/media/rocketR.bmp", timeDiff);
+	cLevel->addSprite(bullet);
+}
+
 void Player::move(DIRECTION dir, int speed) {
 	Position& pos = StaticSprite::pos;
 	float x = pos.getPositionX();
 	float y = pos.getPositionY();
 	float timeDiffInSeconds = timeDiff / 1000.f;
 	
+	float newY = 0;
+	float newX = 0;
+
 	switch (dir) {
 	case UP:
-		pos.setPositionY(y - (speed * timeDiffInSeconds));
+		newY = y - (speed * timeDiffInSeconds);
+		if (! (newY<0 || newY>pos.getBoundY()))
+			pos.setPositionY(newY);
 		break;
 	case DOWN:
-		pos.setPositionY(y + (speed * timeDiffInSeconds));
+		newY = y + (speed * timeDiffInSeconds);
+		if (!(newY<0 || newY>pos.getBoundY()))
+			pos.setPositionY(newY);
 		break;
 	case LEFT:
-		pos.setPositionX(x - (speed * timeDiffInSeconds));
+		newX = x - (speed * timeDiffInSeconds);
+		if (!(newX<0 || newX>pos.getBoundY()))
+			pos.setPositionX(newX);
 		break;
 	case RIGHT:
-		pos.setPositionX(x + (speed * timeDiffInSeconds));
+		newX = x + (speed * timeDiffInSeconds);
+		if (!(newX<0 || newX>pos.getBoundY()))
+		pos.setPositionX(newX);
 		break;
 
 	}

@@ -24,7 +24,7 @@ private:
 
 	SDL_Window* window = NULL;
 	SDL_Renderer* renderer = NULL;
-
+	
 	TTF_Font *font;
 
 	int timeDiff;
@@ -48,12 +48,12 @@ public:
 	~CimpleBulletEngine();
 	int& getTimeDiff() { return timeDiff; };
 	int start();
-	void addSprite(StaticSprite *sprite);
-	void addBackground(Background *sprite);
 	void addLevel(Level* level);
 	CommandManager& getCommandManager() { return cmdMgr; };
 	void onQuitEvent(SDL_Event& event);
 	void pause(const Uint8* kbState);
+
+	SDL_Renderer* getRenderer(); // This is necessary for textinput, it is bad and should not be here.
 private:
 	void input();
 	void tickLevel();

@@ -5,14 +5,22 @@ protected:
 	float PositionX;
 	float PositionY;
 
+	int boundX;
+	int boundY;
+
 public:
-	virtual int getPositionXAsInt() { return static_cast<int>(PositionX); };
-	virtual int getPositionYAsInt() { return static_cast<int>(PositionY); };
-	virtual float getPositionX() { return PositionX; };
-	virtual float getPositionY() { return PositionY; };
-	virtual void setPositionX(float x) { PositionX = x; };
-	virtual void setPositionY(float y) { PositionY = y; };
-	Position(int x, int y);
+	int getPositionXAsInt() { return static_cast<int>(PositionX); };
+	int getPositionYAsInt() { return static_cast<int>(PositionY); };
+	float getPositionX() { return PositionX; };
+	float getPositionY() { return PositionY; };
+	void setPositionX(float x) { PositionX = x; };
+	void setPositionY(float y) { PositionY = y; };
+	int getBoundX();
+	int getBoundY();
+
+	virtual bool outOfBounds();
+
+	Position(int x, int y, int boundX, int boundY);
 	~Position();
 
 };

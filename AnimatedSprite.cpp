@@ -3,30 +3,24 @@
 
 
 
-AnimatedSprite::AnimatedSprite(int x, int y, int sizeX, int sizeY, std::list<AnimationNode*> animation) :
-	StaticSprite(x, y, sizeX, sizeY, ""),
+AnimatedSprite::AnimatedSprite(int x, int y, int boundX, int boundY, int sizeX, int sizeY, std::list<AnimationNode*> animation) :
+	StaticSprite(x, y, boundX, boundY, sizeX, sizeY, ""),
 	animation(animation)
 {}
 
 AnimatedSprite::~AnimatedSprite() {}
 
 void AnimatedSprite::animate() {
-
-	// This is retarded
 	AnimationNode* current = animation.front();
 
 	if (current->type == AnimationNode::NodeType::DELAY) {
 		AnimationNode* back = animation.back();
-		current->delayTicks--;
-		if (current->delayTicks <= 0)
-			animation.pop_front();
+		current->delayTicks--;		
 
-		if (back->type == AnimationNode::NodeType::DELAY) {
-			back->delayTicks++;
-		} 
-		else {
-			AnimationNode* newDelay = new AnimationNode(1);
-			animation.push_back(newDelay);
+		if (current->delayTicks <= 0) {
+			current->delayTicks = current->defaultDelay;
+			animation.pop_front();
+			animation.push_back(current);
 		}
 	}
 	else {
@@ -37,6 +31,7 @@ void AnimatedSprite::animate() {
 	}
 }
 void AnimatedSprite::init(SDL_Renderer * ren) {
+	initialized = true;
 	if (ren != NULL) {
 
 		for (AnimationNode* node : animation) {

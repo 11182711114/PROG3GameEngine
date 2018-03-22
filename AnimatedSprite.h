@@ -15,6 +15,7 @@ struct AnimationNode {
 	SDL_Surface* surface;
 	NodeType type;
 	int delayTicks;
+	int defaultDelay;
 
 	// Texture node const
 	AnimationNode(std::string imagePath):
@@ -26,19 +27,17 @@ struct AnimationNode {
 	// Delay node const
 	AnimationNode(int delayTicks) :
 		delayTicks(delayTicks),
+		defaultDelay(delayTicks),
 		type(NodeType::DELAY),
 		texture(nullptr) {}
 
-	~AnimationNode() {
-		SDL_DestroyTexture(texture);
-		SDL_FreeSurface(surface);
-	}
+	~AnimationNode() {}
 };
 
 
 class AnimatedSprite : public StaticSprite {
 public:
-	AnimatedSprite(int x, int y, int sizeX, int sizeY, std::list<AnimationNode*> animation);
+	AnimatedSprite(int x, int y, int boundX, int boundY, int sizeX, int sizeY, std::list<AnimationNode*> animation);
 	~AnimatedSprite();
 	void animate();
 	void init(SDL_Renderer* ren);

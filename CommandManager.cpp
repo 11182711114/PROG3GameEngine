@@ -1,6 +1,7 @@
 #include "CommandManager.h"
 #include <SDL.h>
 #include <iostream>
+#include "CimpleBulletEngine.h"
 
 
 CommandManager::CommandManager(TextInput *tIn) :
@@ -8,8 +9,8 @@ CommandManager::CommandManager(TextInput *tIn) :
 	kbState = SDL_GetKeyboardState(&kbStateNumKeys);
 }
 
-CommandManager::CommandManager(TTF_Font *font, int x, int y, int w, int h) {
-	textInput = new TextInput(font, x, y, w, h);
+CommandManager::CommandManager(int x, int y, int w, int h):
+	textInput(new TextInput(x, y, w, h)) {
 	kbState = SDL_GetKeyboardState(&kbStateNumKeys);
 }
 
@@ -121,5 +122,13 @@ void CommandManager::unbindEvent(SDL_EventType event) {
 		mappedEvents[event] = eventActions;
 }
 	*eventActions = {};
+}
+
+void CommandManager::acceptKeyInput(const Uint8* kbState) {
+	textInput->toggleActive();
+}
+
+void CommandManager::passRenderer(SDL_Renderer * renderer) {
+	textInput->setRenderer(renderer);
 }
 	

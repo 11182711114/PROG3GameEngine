@@ -15,12 +15,16 @@ void Level::addGui(std::string key, StaticSprite *sprite) {
 }
 
 void Level::tick() {
-
-	for (StaticSprite* spr : objects) {
-		if (spr->toBeDeletedStatus())
+	for (auto it = objects.begin(); it != objects.end(); ) {
+		auto *spr = *it;
+		if (spr->toBeDeletedStatus()) {
+			it = objects.erase(it);
 			delete spr;
-		else
+		}
+		else {
 			spr->tick(objects);
+			++it;
+		}
 	}
 }
 

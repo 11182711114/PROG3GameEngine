@@ -31,8 +31,8 @@ public:
 	void markDelete() {	deletionMark = true; }
 
 	StaticSprite(Position pos, int sizeX, int sizeY, std::string imagePath);
-	StaticSprite(int x, int y, int sizeX, int sizeY, std::string imagePath);
-	StaticSprite(int x, int y, int sizeX, int sizeY, SDL_Texture *texture);
+	StaticSprite(int x, int y, int boundX, int boundY, int sizeX, int sizeY, std::string imagePath);
+	StaticSprite(int x, int y, int boundX, int boundY, int sizeX, int sizeY, SDL_Texture *texture);
 
 protected:
 	std::string imagePath;
@@ -40,12 +40,13 @@ protected:
 	int sizeX;
 	int sizeY;
 
+	bool initialized;
+
 	void setTexture(SDL_Texture*  texture) { this->texture = texture; };
 	void setSurface(SDL_Surface* surface) { this->surface = surface; }
 
 	std::vector<StaticSprite*> collisionDetection(std::vector<StaticSprite*> otherObj);
 private:
-	// This is a base class that should not be instanciated by itself.
 	StaticSprite(const StaticSprite& other) = delete;
 	const StaticSprite& operator=(const StaticSprite& other) = delete;
 

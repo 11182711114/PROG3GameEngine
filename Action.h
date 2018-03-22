@@ -24,19 +24,31 @@ public:
 class KeyAction {
 private:
 	std::function <void(const Uint8*)> function;
+	int cooldown;
+	Uint32 lastCalled;
 	
 public:
-	/*template <typename T>
-	static Action bind(T *object, void(T::*mf)(SDL_Event& event)) {
-	return new Action(object, mf);
-	}*/
+
 	void execute(const Uint8* state) {
-		function(state);
+		if ((int) (SDL_GetTicks() - lastCalled) >= cooldown) {
+			lastCalled = SDL_GetTicks();
+			function(state);
+		}
 	}
 
 	template <typename T>
-	KeyAction(T *object, void(T::*mf)(const Uint8*)) { 
+	KeyAction(T *object, void (T::*mf) (const Uint8*), int cooldown) :
+		cooldown(cooldown),
+		lastCalled(0)
+	{
 		function = std::bind(mf, object, std::placeholders::_1); 
+	};
+
+	template <typename T>
+	KeyAction(T *object, void(T::*mf)(const Uint8*)):
+		cooldown(0)
+	{
+		function = std::bind(mf, object, std::placeholders::_1);
 	};
 	~KeyAction();
 };

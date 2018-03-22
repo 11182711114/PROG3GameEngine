@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ATTATCHEDPOSITION_H
+#define ATTATCHEDPOSITION_H
 #include "Position.h"
 
 class AttatchedPosition : public Position {
@@ -18,3 +19,4 @@ public:
 	~AttatchedPosition();
 };
 
+#endif

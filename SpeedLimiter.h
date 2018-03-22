@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SPEEDLIMITER_H
+#define SPEEDLIMITER_H
 #include <list>
 
 class SpeedLimiter {
@@ -12,3 +13,4 @@ private:
 	std::list<int*> refs;
 };
 
+#endif

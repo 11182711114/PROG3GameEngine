@@ -3,15 +3,25 @@
 #include <iostream>
 
 
-CommandManager::CommandManager() {
+CommandManager::CommandManager(TextInput *tIn) :
+	textInput(tIn) {
+	kbState = SDL_GetKeyboardState(&kbStateNumKeys);
+}
+
+CommandManager::CommandManager(TTF_Font *font, int x, int y, int w, int h) {
+	textInput = new TextInput(font, x, y, w, h);
 	kbState = SDL_GetKeyboardState(&kbStateNumKeys);
 }
 
 
-CommandManager::~CommandManager() {}
+CommandManager::~CommandManager() {
+	delete textInput;
+}
 
-void CommandManager::tick() {
-	checkKbState();
+void CommandManager::tick(bool paused) {
+	if (!paused)
+		checkKbState();
+	checkSystemKbState();
 	pollEvents();
 }
 
@@ -45,6 +55,20 @@ void CommandManager::pollEvents() {
 	}
 }
 
+void CommandManager::checkSystemKbState() {
+	for (std::map<SDL_Scancode, std::list<KeyAction*>*>::iterator it = mappedSystemKeys.begin(); it != mappedSystemKeys.end(); ++it) {
+		SDL_Scancode scancode = it->first;
+		if (kbState[scancode]) {
+			std::list<KeyAction*>* keyList = it->second;
+
+			if (keyList == NULL)
+				return;
+			for (KeyAction* act : *keyList)
+				act->execute(kbState);
+		}
+	}
+}
+
 void CommandManager::bindKey(SDL_Scancode scancode, KeyAction & action) {
 	std::list<KeyAction*>* keyActions = mappedKeys[scancode];
 	if (keyActions == NULL) {
@@ -60,6 +84,24 @@ void CommandManager::bindEvent(SDL_EventType type, Action & action) {
 		eventActions = new std::list<Action*>();
 		mappedEvents[type] = eventActions;
 }
+	eventActions->push_back(&action);
+}
+
+void CommandManager::bindSystemKey(SDL_Scancode scancode, KeyAction & action) {
+	std::list<KeyAction*>* keyActions = mappedSystemKeys[scancode];
+	if (keyActions == NULL) {
+		keyActions = new std::list<KeyAction*>();
+		mappedSystemKeys[scancode] = keyActions;
+	}
+	keyActions->push_back(&action);
+}
+
+void CommandManager::bindSystemEvent(SDL_EventType type, Action & action) {
+	std::list<Action*>* eventActions = mappedSystemEvents[type];
+	if (eventActions == NULL) {
+		eventActions = new std::list<Action*>();
+		mappedSystemEvents[type] = eventActions;
+	}
 	eventActions->push_back(&action);
 }
 

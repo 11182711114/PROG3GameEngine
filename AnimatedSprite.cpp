@@ -4,7 +4,7 @@
 
 
 AnimatedSprite::AnimatedSprite(int x, int y, int sizeX, int sizeY, std::list<AnimationNode*> animation) :
-	Sprite(x, y, sizeX, sizeY, ""),
+	StaticSprite(x, y, sizeX, sizeY, ""),
 	animation(animation)
 {}
 
@@ -30,7 +30,8 @@ void AnimatedSprite::animate() {
 		}
 	}
 	else {
-		Sprite::setTexture(current->texture);
+		StaticSprite::setSurface(current->surface);
+		StaticSprite::setTexture(current->texture);
 		animation.pop_front();
 		animation.push_back(current);
 	}
@@ -43,15 +44,15 @@ void AnimatedSprite::init(SDL_Renderer * ren) {
 				SDL_Surface* surf = SDL_LoadBMP(node->imagePath.c_str());
 				if (surf == NULL)
 					std::cout << "something wrong initializing surface in AnimatedSprite" << std::endl;
+				node->surface = surf;
 				node->texture = SDL_CreateTextureFromSurface(ren, surf);
 				if (node->texture == NULL)
 					std::cout << "something wrong initializing texture in AnimatedSprite" << std::endl;
-				SDL_FreeSurface(surf);
 			}
 		}
 
 	}
 }
-void AnimatedSprite::tick(std::list<Sprite*> otherObj) {
+void AnimatedSprite::tick(std::vector<StaticSprite*> otherObj) {
 	animate();
 }

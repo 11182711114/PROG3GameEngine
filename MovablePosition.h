@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MOVABLEPOSITION_H
+#define MOVABLEPOSITION_H
 #include "Position.h"
 
 class MovablePosition: public Position {
@@ -23,3 +24,4 @@ public:
 	~MovablePosition();
 };
 
+#endif

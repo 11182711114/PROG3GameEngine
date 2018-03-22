@@ -12,6 +12,7 @@ SpeedLimiter::~SpeedLimiter() {}
 void SpeedLimiter::getSpeed(int &ref) {
 	refs.push_back(&ref);
 	int maxSpeedPerRef = maxSpeed / refs.size();
+	//std::printf("Directions: %d\n", refs.size());
 	for (int *ref : refs) {
 		*ref = maxSpeedPerRef;
 	}

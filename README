@@ -1,4 +1,9 @@
-Fredrik Larsson 9306278111
+This is a game engine and game implementation in C++, the project is flawed by trying to do to much things in the engine.
+
+
+-----------------
+
+Fredrik Larsson
 Anspråk på betyg: C
 
 
@@ -22,3 +27,5 @@ Kontroll:
 * Skjut med space
 
 Fienderna dör efter ett skott.
+
+
